@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+    - host: ticketing.dev # made up domain name, need to edit the hostfile
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            path: /api/payments/?(.*) # if a request comes to this address send it to the serviceName
+            backend:
+              service:
+                name: payments-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/users/?(.*) # if a request comes to this address send it to the serviceName
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/tickets/?(.*)
+            backend:
+              service:
+                name: tickets-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/orders/?(.*)
+            backend:
+              service:
+                name: orders-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /?(.*)
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000

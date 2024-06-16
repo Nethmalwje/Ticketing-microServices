@@ -1,0 +1,58 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts: # Corrected typo here
+    - image: nethmalwj/auth
+      context: auth # Folder that contains the Dockerfile
+      docker:
+        dockerfile: Dockerfile
+      sync: # What to do when the files change
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: nethmalwj/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .
+    - image: nethmalwj/tickets
+      context: tickets # Folder that contains the Dockerfile
+      docker:
+        dockerfile: Dockerfile
+      sync: # What to do when the files change
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: nethmalwj/orders
+      context: orders # Folder that contains the Dockerfile
+      docker:
+        dockerfile: Dockerfile
+      sync: # What to do when the files change
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: nethmalwj/expiration
+      context: expiration # Folder that contains the Dockerfile
+      docker:
+        dockerfile: Dockerfile
+      sync: # What to do when the files change
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: nethmalwj/payments
+      context: payments # Folder that contains the Dockerfile
+      docker:
+        dockerfile: Dockerfile
+      sync: # What to do when the files change
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
